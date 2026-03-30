@@ -1,0 +1,771 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Darshita | Portfolio</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Syne:wght@400;600;700;800&display=swap" rel="stylesheet">
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <style>
+        :root {
+            --bg-color: #050505;
+            --text-color: #f3f3f3;
+            --accent: #555;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            cursor: none; /* Hide default cursor for custom cursor */
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            font-family: 'Inter', sans-serif;
+            overflow: hidden; /* Added to prevent scroll during intro */
+            background-image: radial-gradient(circle at 50% 50%, rgba(255,255,255,0.03) 1px, transparent 1px);
+            background-size: 40px 40px;
+        }
+
+        h1, h2, h3, h4, .font-syne {
+            font-family: 'Syne', sans-serif;
+        }
+
+        /* Custom Cursor */
+        .cursor-dot {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 12px;
+            height: 12px;
+            background-color: white;
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 9999;
+            transform: translate(-50%, -50%);
+            mix-blend-mode: difference;
+            transition: width 0.2s, height 0.2s;
+        }
+
+        .cursor-outline {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 40px;
+            height: 40px;
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 9998;
+            transform: translate(-50%, -50%);
+            transition: width 0.2s, height 0.2s, background-color 0.2s;
+        }
+
+        /* Hover states for cursor */
+        a:hover ~ .cursor-dot, button:hover ~ .cursor-dot, input:hover ~ .cursor-dot {
+            width: 40px;
+            height: 40px;
+        }
+
+        a:hover ~ .cursor-outline, button:hover ~ .cursor-outline, input:hover ~ .cursor-outline {
+            width: 60px;
+            height: 60px;
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+
+        /* Hero Section */
+        .hero-section {
+            height: 100vh;
+            width: 100vw;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .search-container {
+            position: absolute;
+            top: 15%;
+            display: flex;
+            align-items: center;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 50px;
+            padding: 12px 24px;
+            width: 300px;
+            max-width: 90%;
+            backdrop-filter: blur(10px);
+            z-index: 10;
+        }
+
+        .search-container input {
+            background: transparent;
+            border: none;
+            color: white;
+            outline: none;
+            width: 100%;
+            margin-left: 10px;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .search-container input::placeholder {
+            color: rgba(255, 255, 255, 0.4);
+        }
+
+        .search-icon {
+            width: 16px;
+            height: 16px;
+            fill: none;
+            stroke: rgba(255, 255, 255, 0.4);
+            stroke-width: 2;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+
+       .zoom-text {
+    font-size: clamp(3rem, 8vw, 8rem);
+    font-weight: 800;
+    text-align: center;
+    line-height: 1.1;
+
+    white-space: normal;
+    overflow-wrap: break-word;
+
+    will-change: transform, opacity;
+    transform-origin: center center;
+    z-index: 5;
+
+    background: linear-gradient(135deg, #ffffff 0%, #a3a3a3 100%);
+    background-clip: text;
+    -webkit-background-clip: text;
+
+    color: transparent;
+    -webkit-text-fill-color: transparent;
+}
+
+        /* Content Sections */
+        .content-section {
+            padding: 100px 5%;
+            max-width: 1400px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 20;
+            background-color: var(--bg-color);
+        }
+
+        .project-card {
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            overflow: hidden;
+            transition: transform 0.3s ease, border-color 0.3s ease;
+            background: rgba(255, 255, 255, 0.02);
+        }
+
+        .project-card:hover {
+            transform: translateY(-10px);
+            border-color: rgba(255, 255, 255, 0.3);
+        }
+
+        .project-img-placeholder {
+            width: 100%;
+            height: 300px;
+            background: linear-gradient(45deg, #111, #222);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .project-img-placeholder::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 50%;
+            height: 100%;
+            background: linear-gradient(to right, transparent, rgba(255,255,255,0.05), transparent);
+            transform: skewX(-20deg);
+            animation: shine 4s infinite;
+        }
+
+        @keyframes shine {
+            100% { left: 200%; }
+        }
+
+        /* Testimonial Marquee */
+        @keyframes scroll {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-50%); }
+        }
+        .animate-scroll {
+            animation: scroll 35s linear infinite;
+            width: max-content;
+        }
+
+        /* Utility classes for GSAP */
+        .reveal-up {
+            opacity: 0;
+            transform: translateY(50px);
+        }
+
+        /* Noise Overlay */
+        .noise {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            pointer-events: none;
+            z-index: 9997;
+            opacity: 0.04;
+            background: url('data:image/svg+xml;utf8,%3Csvg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg"%3E%3Cfilter id="noiseFilter"%3E%3CfeTurbulence type="fractalNoise" baseFrequency="0.65" numOctaves="3" stitchTiles="stitch"/%3E%3C/filter%3E%3Crect width="100%25" height="100%25" filter="url(%23noiseFilter)"/%3E%3C/svg%3E');
+        }
+    </style>
+</head>
+<body>
+
+    <div class="cursor-dot"></div>
+    <div class="cursor-outline"></div>
+    <div class="noise"></div>
+
+    <div id="intro-overlay" class="fixed inset-0 z-[100] flex items-center justify-center bg-[#050505]">
+        
+        <div class="intro-logo-container absolute inset-0 flex items-center justify-center z-50 pointer-events-none">
+            <span class="intro-logo-text font-syne font-bold text-6xl md:text-9xl tracking-tighter text-white inline-block origin-center will-change-transform">DC</span>
+        </div>
+        
+        <div class="intro-scene-2 absolute inset-0 hidden pointer-events-none">
+
+    <!-- Image 1 -->
+    <img src="https://i.pinimg.com/736x/c1/f7/56/c1f756d0c5884096171a0cab84155493.jpg"
+         alt="Portfolio Image 1"
+         class="intro-img left absolute left-[2%] top-[15%] w-40 md:w-56 aspect-[3/4] object-cover rounded-xl opacity-0 -translate-x-[100vw] shadow-2xl">
+
+    <!-- Image 2 -->
+    <img src="https://i.pinimg.com/736x/30/a2/ad/30a2ad1ceb59732d3b1270af2f315e2c.jpg"
+         alt="Portfolio Image 2"
+         class="intro-img right absolute right-[2%] top-[10%] w-48 md:w-64 aspect-[4/5] object-cover rounded-xl opacity-0 translate-x-[100vw] shadow-2xl">
+
+    <!-- Image 3 -->
+    <img src="https://i.pinimg.com/736x/af/3c/76/af3c76c4b274113c2ff601706a04c343.jpg"
+         alt="Portfolio Image 3"
+         class="intro-img top absolute left-[25%] -top-[5%] w-56 md:w-72 aspect-video object-cover rounded-xl opacity-0 -translate-y-[100vh] shadow-2xl">
+
+    <!-- Image 4 -->
+    <img src="http://i.pinimg.com/736x/39/9a/64/399a64bbe2bffcd667f06eeb034613c7.jpg"
+         alt="Portfolio Image 4"
+         class="intro-img bottom absolute right-[20%] -bottom-[5%] w-48 md:w-56 aspect-square object-cover rounded-xl opacity-0 translate-y-[100vh] shadow-2xl">
+
+</div>
+        <div class="search-wrapper-interactive absolute flex items-center justify-center cursor-pointer w-[320px] md:w-[450px] max-w-[90vw] h-[60px] md:h-[80px] opacity-0 scale-90 hidden pointer-events-none">
+            <div class="search-bg absolute inset-0 bg-white/5 border border-white/10 rounded-full backdrop-blur-md transition-colors hover:bg-white/10"></div>
+            <div class="relative z-10 w-full h-full flex items-center justify-center pointer-events-none">
+                <svg class="search-icon-svg absolute left-6 w-5 h-5 md:w-6 md:h-6 text-white/50" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <circle cx="11" cy="11" r="8" stroke-width="2"></circle>
+                    <line x1="21" y1="21" x2="16.65" y2="16.65" stroke-width="2"></line>
+                </svg>
+                <span class="search-text-inner font-syne text-xl md:text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-white to-gray-400 origin-center whitespace-nowrap inline-block">Hello, I'm Darshita</span>
+            </div>
+        </div>
+    </div>
+
+    <div id="page-content" style="opacity: 0; visibility: hidden;">
+        <nav class="fixed top-0 left-0 w-full p-6 flex justify-between items-center z-50 mix-blend-difference">
+            <div class="font-syne font-bold text-xl tracking-wider">DARSHITA.</div>
+            <div class="flex gap-6 text-sm font-medium tracking-wide">
+                <a href="#about" class="hover:text-gray-400 transition-colors">About</a>
+                <a href="#projects" class="hover:text-gray-400 transition-colors">Work</a>
+                <a href="#contact" class="hover:text-gray-400 transition-colors">Contact</a>
+            </div>
+        </nav>
+
+        <main>
+            
+            <section id="about" class="content-section pt-32 pb-20 border-t border-white/5">
+                <div class="max-w-4xl">
+                    <div class="reveal-up flex flex-col justify-center">
+                        <h2 class="font-syne text-5xl md:text-7xl font-bold mb-4">Hi! I'm Darshita</h2>
+                        <p class="text-xl md:text-2xl text-gray-300 leading-relaxed mb-8 font-medium">
+                            Crafting Digital Stories with Code & Creativity
+                        </p>
+                        <div class="flex flex-wrap gap-4 mb-8">
+                            <a href="#projects" class="px-8 py-4 bg-white text-black font-syne font-bold rounded-full hover:scale-105 transition-transform flex items-center gap-2">
+                                View My Work
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path></svg>
+                            </a>
+                            <a href="#contact" class="px-8 py-4 bg-transparent border border-white/30 text-white font-syne font-bold rounded-full hover:bg-white/10 transition-colors">
+                                Contact Me
+                            </a>
+                        </div>
+                        <p class="text-2xl md:text-3xl text-white font-syne font-bold leading-relaxed whitespace-nowrap">
+                            From 'What If' To 'Look At This'
+                        </p>
+                    </div>
+                </div>
+            </section>
+
+        <section id="about-details" class="content-section py-20 border-t border-white/5">
+            <div class="grid grid-cols-1 md:grid-cols-12 gap-12">
+                <div class="md:col-span-4 reveal-up">
+                    <h2 class="text-4xl md:text-6xl font-bold font-syne sticky top-32">About Me.</h2>
+                </div>
+                <div class="md:col-span-8 reveal-up flex flex-col gap-12">
+                    <div>
+                        <p class="text-2xl md:text-3xl text-gray-200 font-medium leading-tight mb-8">
+                            A fullstack software developer specializing in modern Web Development with a growing focus on Artificial Intelligence & Machine Learning.
+                        </p>
+                        
+                        <div class="mt-8">
+                            <h3 class="text-sm font-syne font-bold mb-4 text-gray-500 uppercase tracking-widest">Interests</h3>
+                            <div class="flex flex-wrap gap-3">
+                                <span class="px-5 py-2 border border-white/10 bg-white/5 rounded-full text-sm text-gray-300">Interactive Web Design</span>
+                                <span class="px-5 py-2 border border-white/10 bg-white/5 rounded-full text-sm text-gray-300">UI/UX Design</span>
+                                <span class="px-5 py-2 border border-white/10 bg-white/5 rounded-full text-sm text-gray-300">Digital Storytelling</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="credentials" class="content-section py-20 border-t border-white/5">
+            <h2 class="text-4xl md:text-6xl font-bold font-syne mb-12 reveal-up">Credentials.</h2>
+            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 reveal-up">
+                <a href="Connecting to a MongoDB Database.pdf" target="_blank" class="p-6 border border-white/10 bg-white/[0.02] rounded-xl hover:bg-white/10 transition-colors flex flex-col gap-4 group">
+                    <svg class="w-8 h-8 text-gray-500 group-hover:text-white transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
+                    <span class="font-medium text-lg text-gray-300 group-hover:text-white">Connecting to a MongoDB Database</span>
+                </a>
+                <a href="css3.pdf" target="_blank" class="p-6 border border-white/10 bg-white/[0.02] rounded-xl hover:bg-white/10 transition-colors flex flex-col gap-4 group">
+                    <svg class="w-8 h-8 text-gray-500 group-hover:text-white transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
+                    <span class="font-medium text-lg text-gray-300 group-hover:text-white">CSS3</span>
+                </a>
+                <a href="frontend web developer.pdf" target="_blank" class="p-6 border border-white/10 bg-white/[0.02] rounded-xl hover:bg-white/10 transition-colors flex flex-col gap-4 group">
+                    <svg class="w-8 h-8 text-gray-500 group-hover:text-white transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
+                    <span class="font-medium text-lg text-gray-300 group-hover:text-white">Front End Web Developer</span>
+                </a>
+                <a href="git n github.pdf" target="_blank" class="p-6 border border-white/10 bg-white/[0.02] rounded-xl hover:bg-white/10 transition-colors flex flex-col gap-4 group">
+                    <svg class="w-8 h-8 text-gray-500 group-hover:text-white transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
+                    <span class="font-medium text-lg text-gray-300 group-hover:text-white">Complete Git Guide</span>
+                </a>
+                <a href="html.pdf" target="_blank" class="p-6 border border-white/10 bg-white/[0.02] rounded-xl hover:bg-white/10 transition-colors flex flex-col gap-4 group">
+                    <svg class="w-8 h-8 text-gray-500 group-hover:text-white transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
+                    <span class="font-medium text-lg text-gray-300 group-hover:text-white">HTML5 - The Language</span>
+                </a>
+                <a href="java script.pdf" target="_blank" class="p-6 border border-white/10 bg-white/[0.02] rounded-xl hover:bg-white/10 transition-colors flex flex-col gap-4 group">
+                    <svg class="w-8 h-8 text-gray-500 group-hover:text-white transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
+                    <span class="font-medium text-lg text-gray-300 group-hover:text-white">JavaScript</span>
+                </a>
+            </div>
+        </section>
+
+        <section id="testimonials" class="content-section py-20 border-t border-white/5 overflow-hidden">
+            <h2 class="text-4xl md:text-6xl font-bold font-syne mb-16 reveal-up">Testimonials.</h2>
+            
+            <div class="relative w-full reveal-up group">
+                <div class="absolute inset-y-0 left-0 w-12 md:w-32 bg-gradient-to-r from-[var(--bg-color)] to-transparent z-10 pointer-events-none"></div>
+                <div class="absolute inset-y-0 right-0 w-12 md:w-32 bg-gradient-to-l from-[var(--bg-color)] to-transparent z-10 pointer-events-none"></div>
+                
+                <div class="flex w-max animate-scroll group-hover:[animation-play-state:paused]">
+                    <div class="flex gap-6 pr-6">
+                        <div class="w-[300px] md:w-[400px] p-8 border border-white/10 bg-white/[0.02] rounded-2xl flex flex-col justify-between gap-6 shrink-0">
+                            <p class="text-gray-300 italic">"Darshita demonstrates strong technical skills and a creative approach to problem-solving."</p>
+                            <div class="flex items-center gap-4">
+                                <img src="https://i.pravatar.cc/150?u=rohan" alt="Rohan Sharma" class="w-12 h-12 rounded-full object-cover">
+                                <div>
+                                    <h4 class="font-bold text-white font-syne">Rohan Sharma</h4>
+                                    <span class="text-sm text-gray-500">Teammate</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="w-[300px] md:w-[400px] p-8 border border-white/10 bg-white/[0.02] rounded-2xl flex flex-col justify-between gap-6 shrink-0">
+                            <p class="text-gray-300 italic">"She is consistent, detail-oriented, and delivers quality work within deadlines."</p>
+                            <div class="flex items-center gap-4">
+                                <img src="https://i.pravatar.cc/150?u=ananya" alt="Ananya Iyer" class="w-12 h-12 rounded-full object-cover">
+                                <div>
+                                    <h4 class="font-bold text-white font-syne">Ananya Iyer</h4>
+                                    <span class="text-sm text-gray-500">Teammate</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="w-[300px] md:w-[400px] p-8 border border-white/10 bg-white/[0.02] rounded-2xl flex flex-col justify-between gap-6 shrink-0">
+                            <p class="text-gray-300 italic">"Darshita contributes effectively in team environments and communicates her ideas clearly."</p>
+                            <div class="flex items-center gap-4">
+                                <img src="https://i.pravatar.cc/150?u=aarya" alt="Aarya Mehta" class="w-12 h-12 rounded-full object-cover">
+                                <div>
+                                    <h4 class="font-bold text-white font-syne">Aarya Mehta</h4>
+                                    <span class="text-sm text-gray-500">Teammate</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="w-[300px] md:w-[400px] p-8 border border-white/10 bg-white/[0.02] rounded-2xl flex flex-col justify-between gap-6 shrink-0">
+                            <p class="text-gray-300 italic">"Her ability to combine logic with creativity is truly commendable."</p>
+                            <div class="flex items-center gap-4">
+                                <img src="https://i.pravatar.cc/150?u=sneha" alt="Sneha Reddy" class="w-12 h-12 rounded-full object-cover">
+                                <div>
+                                    <h4 class="font-bold text-white font-syne">Sneha Reddy</h4>
+                                    <span class="text-sm text-gray-500">Mentor</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="w-[300px] md:w-[400px] p-8 border border-white/10 bg-white/[0.02] rounded-2xl flex flex-col justify-between gap-6 shrink-0">
+                            <p class="text-gray-300 italic">"A dedicated individual who approaches every project with professionalism."</p>
+                            <div class="flex items-center gap-4">
+                                <img src="https://i.pravatar.cc/150?u=karthik" alt="Karthik Nair" class="w-12 h-12 rounded-full object-cover">
+                                <div>
+                                    <h4 class="font-bold text-white font-syne">Karthik Nair</h4>
+                                    <span class="text-sm text-gray-500">Mentor</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="flex gap-6 pr-6">
+                        <div class="w-[300px] md:w-[400px] p-8 border border-white/10 bg-white/[0.02] rounded-2xl flex flex-col justify-between gap-6 shrink-0">
+                            <p class="text-gray-300 italic">"Darshita demonstrates strong technical skills and a creative approach to problem-solving."</p>
+                            <div class="flex items-center gap-4">
+                                <img src="https://i.pravatar.cc/150?u=rohan" alt="Rohan Sharma" class="w-12 h-12 rounded-full object-cover">
+                                <div>
+                                    <h4 class="font-bold text-white font-syne">Rohan Sharma</h4>
+                                    <span class="text-sm text-gray-500">Teammate</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="w-[300px] md:w-[400px] p-8 border border-white/10 bg-white/[0.02] rounded-2xl flex flex-col justify-between gap-6 shrink-0">
+                            <p class="text-gray-300 italic">"She is consistent, detail-oriented, and delivers quality work within deadlines."</p>
+                            <div class="flex items-center gap-4">
+                                <img src="https://i.pravatar.cc/150?u=ananya" alt="Ananya Iyer" class="w-12 h-12 rounded-full object-cover">
+                                <div>
+                                    <h4 class="font-bold text-white font-syne">Ananya Iyer</h4>
+                                    <span class="text-sm text-gray-500">Teammate</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="w-[300px] md:w-[400px] p-8 border border-white/10 bg-white/[0.02] rounded-2xl flex flex-col justify-between gap-6 shrink-0">
+                            <p class="text-gray-300 italic">"Darshita contributes effectively in team environments and communicates her ideas clearly."</p>
+                            <div class="flex items-center gap-4">
+                                <img src="https://i.pravatar.cc/150?u=aarya" alt="Aarya Mehta" class="w-12 h-12 rounded-full object-cover">
+                                <div>
+                                    <h4 class="font-bold text-white font-syne">Aarya Mehta</h4>
+                                    <span class="text-sm text-gray-500">Teammate</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="w-[300px] md:w-[400px] p-8 border border-white/10 bg-white/[0.02] rounded-2xl flex flex-col justify-between gap-6 shrink-0">
+                            <p class="text-gray-300 italic">"Her ability to combine logic with creativity is truly commendable."</p>
+                            <div class="flex items-center gap-4">
+                                <img src="https://i.pravatar.cc/150?u=sneha" alt="Sneha Reddy" class="w-12 h-12 rounded-full object-cover">
+                                <div>
+                                    <h4 class="font-bold text-white font-syne">Sneha Reddy</h4>
+                                    <span class="text-sm text-gray-500">Mentor</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="w-[300px] md:w-[400px] p-8 border border-white/10 bg-white/[0.02] rounded-2xl flex flex-col justify-between gap-6 shrink-0">
+                            <p class="text-gray-300 italic">"A dedicated individual who approaches every project with professionalism."</p>
+                            <div class="flex items-center gap-4">
+                                <img src="https://i.pravatar.cc/150?u=karthik" alt="Karthik Nair" class="w-12 h-12 rounded-full object-cover">
+                                <div>
+                                    <h4 class="font-bold text-white font-syne">Karthik Nair</h4>
+                                    <span class="text-sm text-gray-500">Mentor</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="projects" class="content-section py-20 border-t border-white/5">
+            <h2 class="text-4xl md:text-6xl font-bold mb-16 reveal-up">Selected Works</h2>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <a href="https://skypulse-weather-vj3.caffeine.xyz/#caffeineAdminToken=f359cbca6fd724b224d22875ac32f64990216184ff814ca9d8836063827aec21" target="_blank" class="project-card reveal-up group cursor-pointer block">
+                    <div class="project-img-placeholder" style="background-image: url('https://images.unsplash.com/photo-1504608524841-42fe6f032b4b?q=80&w=800&auto=format&fit=crop'); background-size: cover; background-position: center;"></div>
+                    <div class="p-8">
+                        <div class="flex justify-between items-center mb-4">
+                            <h3 class="text-2xl font-bold">SkyPulse Weather</h3>
+                            <svg class="w-6 h-6 transform group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path></svg>
+                        </div>
+                        <p class="text-gray-400">A dynamic weather platform providing real-time forecasting with an elegant, interactive UI.</p>
+                        <div class="flex gap-3 mt-6">
+                            <span class="text-xs py-1 px-3 border border-white/10 rounded-full">Web App</span>
+                            <span class="text-xs py-1 px-3 border border-white/10 rounded-full">Interactive</span>
+                        </div>
+                    </div>
+                </a>
+
+                <a href="https://trustcap-platform-blu.caffeine.xyz/#caffeineAdminToken=43b70cf02385139f50c1d948d11b8bb2e464acbd5b454d65845347328e27bc20" target="_blank" class="project-card reveal-up group cursor-pointer block" style="transition-delay: 0.1s;">
+                    <div class="project-img-placeholder" style="background-image: url('https://images.unsplash.com/photo-1551288049-bebda4e38f71?q=80&w=800&auto=format&fit=crop'); background-size: cover; background-position: center;"></div>
+                    <div class="p-8">
+                        <div class="flex justify-between items-center mb-4">
+                            <h3 class="text-2xl font-bold">TrustCap Platform</h3>
+                            <svg class="w-6 h-6 transform group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path></svg>
+                        </div>
+                        <p class="text-gray-400">A sophisticated financial platform dashboard built for complex data visualization.</p>
+                        <div class="flex gap-3 mt-6">
+                            <span class="text-xs py-1 px-3 border border-white/10 rounded-full">Finance</span>
+                            <span class="text-xs py-1 px-3 border border-white/10 rounded-full">Dashboard</span>
+                        </div>
+                    </div>
+                </a>
+            </div>
+        </section>
+
+        <section id="contact" class="content-section py-32 border-t border-white/5 text-center">
+            <h2 class="text-5xl md:text-8xl font-bold mb-8 reveal-up">Let's Connect.</h2>
+            <p class="text-xl text-gray-400 mb-12 max-w-2xl mx-auto reveal-up">
+                Currently available for freelance opportunities. If you have a project in mind, let's build something beautiful together.
+            </p>
+            
+            <div class="reveal-up mb-16">
+                <button onclick="openMailModal()" class="inline-block relative font-syne text-2xl md:text-4xl group cursor-pointer text-white border-none bg-transparent">
+                    Send Mail
+                    <span class="absolute -bottom-2 left-0 w-0 h-[2px] bg-white transition-all duration-300 group-hover:w-full"></span>
+                </button>
+            </div>
+            
+            <div class="flex justify-center gap-4 md:gap-6 reveal-up mb-20 flex-wrap px-4">
+                <a href="https://open.spotify.com/" target="_blank" class="w-14 h-14 rounded-full border border-white/10 bg-white/[0.02] flex items-center justify-center hover:bg-white/10 hover:-translate-y-1 transition-all group">
+                    <svg class="w-6 h-6 text-gray-400 group-hover:text-white" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.66 0 12 0zm5.521 17.34c-.24.359-.66.48-1.021.24-2.82-1.74-6.36-2.101-10.561-1.141-.418.122-.779-.179-.899-.539-.12-.421.18-.78.54-.9 4.56-1.021 8.52-.6 11.64 1.32.42.18.479.659.301 1.02zm1.44-3.3c-.301.42-.84.6-1.262.3-3.239-1.98-8.159-2.58-11.939-1.38-.479.12-1.02-.12-1.14-.6-.12-.48.12-1.021.6-1.141C9.6 9.9 15 10.561 18.72 12.84c.361.181.54.78.241 1.2zm.12-3.36C15.24 8.4 8.82 8.16 5.16 9.301c-.6.179-1.2-.181-1.38-.721-.18-.6.18-1.2.72-1.38 4.26-1.26 11.28-1.02 15.72 1.621.539.3.719 1.02.419 1.56-.299.421-1.02.539-1.559.3z"/></svg>
+                </a>
+                <a href="https://in.pinterest.com/devilxeye3/" target="_blank" class="w-14 h-14 rounded-full border border-white/10 bg-white/[0.02] flex items-center justify-center hover:bg-white/10 hover:-translate-y-1 transition-all group">
+                    <svg class="w-6 h-6 text-gray-400 group-hover:text-white" viewBox="0 0 24 24" fill="currentColor"><path d="M12.017 0C5.396 0 .029 5.367.029 11.987c0 5.079 3.158 9.417 7.618 11.162-.105-.949-.199-2.403.041-3.439.219-.937 1.406-5.957 1.406-5.957s-.359-.72-.359-1.781c0-1.663.967-2.911 2.168-2.911 1.024 0 1.518.769 1.518 1.688 0 1.029-.653 2.567-.992 3.992-.285 1.193.6 2.165 1.775 2.165 2.128 0 3.768-2.245 3.768-5.487 0-2.861-2.063-4.869-5.008-4.869-3.41 0-5.409 2.562-5.409 5.199 0 1.033.394 2.143.889 2.741.099.12.112.225.085.345-.09.375-.293 1.199-.334 1.363-.053.225-.172.271-.401.165-1.495-.69-2.433-2.878-2.433-4.646 0-3.776 2.748-7.252 7.951-7.252 4.168 0 7.392 2.967 7.392 6.923 0 4.135-2.607 7.462-6.233 7.462-1.214 0-2.354-.629-2.758-1.379l-.749 2.848c-.269 1.045-1.004 2.352-1.498 3.146 1.123.345 2.306.535 3.55.535 6.607 0 11.985-5.365 11.985-11.987C23.97 5.367 18.592 0 12.017 0z"/></svg>
+                </a>
+                <a href="https://discord.com/channels/@me" target="_blank" class="w-14 h-14 rounded-full border border-white/10 bg-white/[0.02] flex items-center justify-center hover:bg-white/10 hover:-translate-y-1 transition-all group">
+                    <svg class="w-6 h-6 text-gray-400 group-hover:text-white" viewBox="0 0 24 24" fill="currentColor"><path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057 19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028c.462-.63.874-1.295 1.226-1.994a.076.076 0 0 0-.041-.106 13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.892.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.028zM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.956-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.956 2.418-2.157 2.418zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.955-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.946 2.418-2.157 2.418z"/></svg>
+                </a>
+                <a href="https://www.instagram.com/darshi_072?igsh=MTczZWZlMWRnc2ZweA==" target="_blank" class="w-14 h-14 rounded-full border border-white/10 bg-white/[0.02] flex items-center justify-center hover:bg-white/10 hover:-translate-y-1 transition-all group">
+                    <svg class="w-6 h-6 text-gray-400 group-hover:text-white" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+                </a>
+                <a href="https://www.linkedin.com/in/darshita-c-761a28382?utm_source=share_via&utm_content=profile&utm_medium=member_android" target="_blank" class="w-14 h-14 rounded-full border border-white/10 bg-white/[0.02] flex items-center justify-center hover:bg-white/10 hover:-translate-y-1 transition-all group">
+                    <svg class="w-6 h-6 text-gray-400 group-hover:text-white" viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+                </a>
+                <a href="https://github.com/darsh1a" target="_blank" class="w-14 h-14 rounded-full border border-white/10 bg-white/[0.02] flex items-center justify-center hover:bg-white/10 hover:-translate-y-1 transition-all group">
+                    <svg class="w-6 h-6 text-gray-400 group-hover:text-white" viewBox="0 0 24 24" fill="currentColor"><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg>
+                </a>
+            </div>
+            
+            <div class="mt-32 flex justify-center items-center text-sm text-gray-500 reveal-up">
+                <p>© 2024 Darshita. All rights reserved.</p>
+            </div>
+        </section>
+
+        </main>
+    </div> <div id="mail-modal" class="fixed inset-0 z-[200] flex items-center justify-center bg-black/80 backdrop-blur-md opacity-0 pointer-events-none transition-all duration-300">
+        <div id="mail-modal-content" class="bg-[#0a0a0a] border border-white/10 p-8 md:p-10 rounded-3xl w-[90%] max-w-lg transform scale-95 transition-all duration-300 relative">
+            <div class="flex justify-between items-center mb-8">
+                <h3 class="text-3xl font-syne font-bold text-white">Send Message</h3>
+                <button onclick="closeMailModal()" class="text-gray-500 hover:text-white transition-colors cursor-pointer p-2 border border-white/10 rounded-full hover:bg-white/10">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                </button>
+            </div>
+            <form onsubmit="event.preventDefault(); closeMailModal(); alert('Message sent successfully!');" class="flex flex-col gap-6">
+                <div class="flex flex-col gap-2">
+                    <label class="text-sm text-gray-400 uppercase tracking-widest font-syne">Your Email</label>
+                    <input type="email" required placeholder="hello@example.com" class="w-full bg-white/5 border border-white/10 rounded-xl p-4 text-white focus:outline-none focus:border-white/30 transition-colors">
+                </div>
+                <div class="flex flex-col gap-2">
+                    <label class="text-sm text-gray-400 uppercase tracking-widest font-syne">Your Message</label>
+                    <textarea required placeholder="What's on your mind?" rows="4" class="w-full bg-white/5 border border-white/10 rounded-xl p-4 text-white focus:outline-none focus:border-white/30 transition-colors resize-none"></textarea>
+                </div>
+                <button type="submit" class="w-full py-4 mt-4 bg-white text-black font-syne font-bold text-lg rounded-xl hover:bg-gray-200 transition-transform hover:-translate-y-1 cursor-pointer">Send Mail</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // Custom Cursor Logic
+        const cursorDot = document.querySelector('.cursor-dot');
+        const cursorOutline = document.querySelector('.cursor-outline');
+
+        window.addEventListener('mousemove', (e) => {
+            const posX = e.clientX;
+            const posY = e.clientY;
+
+            // Dot follows exactly
+            cursorDot.style.left = `${posX}px`;
+            cursorDot.style.top = `${posY}px`;
+
+            // Outline follows with a slight delay using animate for smoothness
+            cursorOutline.animate({
+                left: `${posX}px`,
+                top: `${posY}px`
+            }, { duration: 500, fill: "forwards" });
+        });
+
+        // Initialize GSAP ScrollTrigger
+        gsap.registerPlugin(ScrollTrigger);
+
+        // --- 1. New Intro Sequence ---
+        const introTl = gsap.timeline({ delay: 0.5 });
+
+        // Phase 1: Zoom completely INTO the "DC" logo
+        introTl.to('.intro-logo-text', {
+            scale: 150, // Massive zoom to go "through" the text
+            opacity: 0,
+            duration: 1.5,
+            ease: "power4.inOut"
+        });
+
+        // Hide logo container, show scene 2 container
+        introTl.set('.intro-logo-container', { display: 'none' });
+        introTl.set('.intro-scene-2', { display: 'block' });
+
+        // Phase 2: Images slide in from edges
+        introTl.to('.intro-img.left', { x: 0, opacity: 1, duration: 1.2, ease: "power3.out" }, "scene2");
+        introTl.to('.intro-img.right', { x: 0, opacity: 1, duration: 1.2, ease: "power3.out" }, "scene2");
+        introTl.to('.intro-img.top', { y: 0, opacity: 1, duration: 1.2, ease: "power3.out" }, "scene2");
+        introTl.to('.intro-img.bottom', { y: 0, opacity: 1, duration: 1.2, ease: "power3.out" }, "scene2");
+
+        // Phase 4: Wait 3 seconds (No text to animate here anymore)
+        introTl.to({}, { duration: 3 });
+
+        // Phase 5: Clear Scene 2
+        introTl.to('.intro-img', { 
+            scale: 0.8, 
+            opacity: 0, 
+            y: 100, 
+            stagger: 0.1, 
+            duration: 0.8, 
+            ease: "power2.in" 
+        }, "sceneOut");
+
+        introTl.set('.intro-scene-2', { display: 'none' });
+
+        // Phase 6: Show interactive search bar and enable clicking
+        introTl.set('.search-wrapper-interactive', { display: 'flex' });
+        introTl.fromTo('.search-wrapper-interactive', 
+            { scale: 0.8, opacity: 0, y: 30 }, 
+            { scale: 1, opacity: 1, y: 0, duration: 1, ease: "back.out(1.5)",
+                onComplete: () => {
+                    // Re-enable pointer events so it becomes clickable ONLY when fully shown
+                    document.querySelector('.search-wrapper-interactive').classList.remove('pointer-events-none');
+                }
+            }
+        );
+
+        // --- 2. Search Bar Click Interaction (Zoom & Enter) ---
+        document.querySelector('.search-wrapper-interactive').addEventListener('click', () => {
+            const enterTl = gsap.timeline();
+            
+            // Fade out the search box styling and icon
+            enterTl.to('.search-bg', { opacity: 0, duration: 0.3 });
+            enterTl.to('.search-icon-svg', { opacity: 0, duration: 0.3 }, "<");
+            
+            // Massively zoom the text towards the user
+            enterTl.to('.search-text-inner', {
+                scale: 60,
+                opacity: 0,
+                duration: 1.5,
+                ease: "power3.inOut"
+            }, "<0.1");
+            
+            // Hide intro overlay entirely
+            enterTl.set('#intro-overlay', { display: 'none' });
+            
+            // Enable scrolling (restore original body overflow states)
+            enterTl.set('body', { overflowY: 'auto', overflowX: 'hidden' });
+            
+            // Fade in and slide up main page content
+            enterTl.to('#page-content', { 
+                autoAlpha: 1, 
+                duration: 1.2,
+                ease: "power2.out"
+            }, "-=0.5");
+        });
+
+        // --- 3. Reveal Animations for Content ---
+        const revealElements = gsap.utils.toArray('.reveal-up');
+
+        revealElements.forEach(element => {
+            gsap.fromTo(element, 
+                { 
+                    opacity: 0, 
+                    y: 80 
+                },
+                {
+                    opacity: 1,
+                    y: 0,
+                    duration: 1.2,
+                    ease: "power3.out",
+                    scrollTrigger: {
+                        trigger: element,
+                        start: "top 85%", // Trigger when element is 85% down the screen
+                        toggleActions: "play none none reverse" // Reverses when scrolling back up
+                    }
+                }
+            );
+        });
+
+        // Hover effect for project images (Optional simple interaction)
+        document.querySelectorAll('.project-card').forEach(card => {
+            card.addEventListener('mouseenter', () => {
+                gsap.to(cursorOutline, {scale: 1.5, backgroundColor: "rgba(255,255,255,0.1)", duration: 0.2});
+            });
+            card.addEventListener('mouseleave', () => {
+                gsap.to(cursorOutline, {scale: 1, backgroundColor: "transparent", duration: 0.2});
+            });
+        });
+
+        // Mail Modal Logic
+        function openMailModal() {
+            const modal = document.getElementById('mail-modal');
+            const content = document.getElementById('mail-modal-content');
+            modal.classList.remove('opacity-0', 'pointer-events-none');
+            content.classList.remove('scale-95');
+            content.classList.add('scale-100');
+        }
+
+        function closeMailModal() {
+            const modal = document.getElementById('mail-modal');
+            const content = document.getElementById('mail-modal-content');
+            modal.classList.add('opacity-0', 'pointer-events-none');
+            content.classList.remove('scale-100');
+            content.classList.add('scale-95');
+        }
+    </script>
+    <script>
+  const supabaseUrl = "https://hfusnsoydprecttzgalq.supabase.cohttps://hfusnsoydprecttzgalq.supabase.co";
+const supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhmdXNuc295ZHByZWN0dHpnYWxxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQ4ODUyNTQsImV4cCI6MjA5MDQ2MTI1NH0.toiJFssVpgNl7d2olo-l1ZWVrq97vEBflWRmwJYqubQ";
+
+  const supabase = window.supabase.createClient(supabaseUrl, supabaseKey);
+
+  async function sendMessage() {
+    const message = document.getElementById("messageInput").value;
+
+    const { data, error } = await supabase
+      .from('darshita')
+      .insert([{ text: message }]);
+
+    if (error) {
+      console.log("❌ Error:", error.message);
+    } else {
+      console.log("✅ Sent:", data);
+    }
+  }
+</script>
+<script>
+async function sendMessage() {
+  const message = document.getElementById("messageInput").value;
+
+  const { data, error } = await supabase
+    .from('darshita')
+    .insert([{ text: message }])
+    .select();
+
+  console.log("DATA:", data);
+  console.log("ERROR:", error);
+}
+</script>
+</body>
+</html>
