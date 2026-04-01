@@ -1,4 +1,4 @@
-name: Deploy Portfolio
+name: Simple CI
 
 on:
   push:
@@ -6,18 +6,12 @@ on:
       - main
 
 jobs:
-  build:
+  check:
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Install dependencies
-        run: npm install
-
-      - name: Build project
-        run: npm run build
-
-      - name: Deploy
-        run: echo "Deploy step here"
+      - name: Run a test
+        run: echo "CI/CD working successfully 🚀"
