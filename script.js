@@ -151,4 +151,5 @@ function closeMailModal()
     const content = document.getElementById('mail-modal-content');
     modal.classList.add('opacity-0', 'pointer-events-none');
     content.classList.remove('scale-100');
+    process.env.SUPABASE_URL
 }
